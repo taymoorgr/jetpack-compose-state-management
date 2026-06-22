@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">TasksApp</string>
+
+    <!-- Profile validation -->
+    <string name="error_name_blank">Name can\'t be empty</string>
+    <string name="error_email_invalid">Enter a valid email</string>
+
+    <!-- Snackbars / one-time messages -->
+    <string name="profile_saved">Profile saved</string>
+    <string name="task_deleted">Task deleted</string>
+    <string name="action_undo">Undo</string>
+
+    <!-- Settings -->
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_tasks">Tasks</string>
+    <string name="settings_sort_order">Sort order</string>
+    <string name="settings_hide_completed">Hide completed tasks</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_priority">Priority</string>
+
+    <!-- Tasks -->
+    <string name="filter_all">All</string>
+
+    <!-- Task priority -->
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
+</resources>

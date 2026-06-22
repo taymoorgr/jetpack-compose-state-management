@@ -1,0 +1,4 @@
+<resources>
+    <!-- Launch theme (dark) - selected automatically in night mode so there is no light flash. -->
+    <style name="Theme.TasksApp" parent="android:Theme.Material.NoActionBar" />
+</resources>

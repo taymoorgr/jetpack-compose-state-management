@@ -1,0 +1,5 @@
+<resources>
+    <!-- Launch theme (light). Visual theming is handled by TasksAppTheme in Compose;
+         this only styles the brief launch window. enableEdgeToEdge() manages system bars. -->
+    <style name="Theme.TasksApp" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
