@@ -57,7 +57,6 @@ class TasksListViewModel @Inject constructor(
             medium = matched.count { it.priority == Priority.MEDIUM },
             high = matched.count { it.priority == Priority.HIGH },
         )
-        // The selected priority then narrows the visible list on top of the matched set.
         val visible = matched
             .filter { filter == PriorityFilter.ALL || it.priority == filter.priority }
             .sortedWith(comparatorFor(preferences.sortOrder))
@@ -97,6 +96,14 @@ class TasksListViewModel @Inject constructor(
 
     fun onUndoDelete(task: Task) {
         viewModelScope.launch { taskRepository.restoreTask(task) }
+    }
+
+    fun onBulkComplete(ids: Set<Long>) {
+        viewModelScope.launch { ids.forEach { taskRepository.setCompleted(it, true) } }
+    }
+
+    fun onBulkDelete(ids: Set<Long>) {
+        viewModelScope.launch { ids.forEach { taskRepository.deleteTask(it) } }
     }
 }
 

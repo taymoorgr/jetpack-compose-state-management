@@ -1,4 +1,4 @@
-# Version catalog — all versions resolved live against Maven Central / Google Maven
+# Version catalog - all versions resolved live against Maven Central / Google Maven
 # on 2026-06-19 to the latest stable, mutually-compatible set for AGP 9 / Kotlin 2.3.10.
 # Some libraries are declared here but only wired into :app in the phase that needs them.
 

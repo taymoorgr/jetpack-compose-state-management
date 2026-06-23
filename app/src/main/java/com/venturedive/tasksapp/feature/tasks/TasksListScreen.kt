@@ -17,6 +17,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Checklist
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,13 +30,18 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -48,8 +54,10 @@ import com.venturedive.tasksapp.core.designsystem.component.LoadingState
 import com.venturedive.tasksapp.core.designsystem.theme.spacing
 import com.venturedive.tasksapp.domain.model.Task
 import com.venturedive.tasksapp.feature.tasks.components.PriorityFilterRow
+import com.venturedive.tasksapp.feature.tasks.components.SelectionBar
 import com.venturedive.tasksapp.feature.tasks.components.TaskRow
 import com.venturedive.tasksapp.feature.tasks.components.TaskSearchField
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 // collectAsStateWithLifecycle: collect UiState at the edge; consume one-time events here too.
@@ -64,6 +72,15 @@ fun TasksScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val deletedMessage = stringResource(R.string.task_deleted)
     val undoLabel = stringResource(R.string.action_undo)
+
+    // Selection is transient UI state, so it's held here via rememberSaveable + the custom Saver
+    // (TaskSelection.Saver) - not in the ViewModel.
+    var selection by rememberSaveable(stateSaver = TaskSelection.Saver) {
+        mutableStateOf(
+            TaskSelection()
+        )
+    }
+    var confirmDelete by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -85,14 +102,44 @@ fun TasksScreen(
     TasksContent(
         state = state,
         snackbarHostState = snackbarHostState,
+        selection = selection,
         onSearchChange = viewModel::onSearchChange,
         onFilterChange = viewModel::onFilterChange,
         onToggleComplete = viewModel::onToggleComplete,
         onDelete = viewModel::onDelete,
+        onToggleSelect = { id -> selection = selection.toggle(id) },
+        onClearSelection = { selection = selection.clear() },
+        onBulkComplete = {
+            viewModel.onBulkComplete(selection.ids)
+            selection = selection.clear()
+        },
+        onBulkDeleteRequest = { confirmDelete = true },
         onAddTask = onAddTask,
         onEditTask = onEditTask,
         modifier = modifier,
     )
+
+    if (confirmDelete) {
+        AlertDialog(
+            onDismissRequest = { confirmDelete = false },
+            title = { Text(stringResource(R.string.bulk_delete_title)) },
+            text = { Text(stringResource(R.string.bulk_delete_message, selection.count)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onBulkDelete(selection.ids)
+                        selection = selection.clear()
+                        confirmDelete = false
+                    },
+                ) { Text(stringResource(R.string.action_delete)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmDelete = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            },
+        )
+    }
 }
 
 // Stateless Content (UDF): state down, events up - no ViewModel passed down.
@@ -101,10 +148,15 @@ fun TasksScreen(
 fun TasksContent(
     state: TasksListUiState,
     snackbarHostState: SnackbarHostState,
+    selection: TaskSelection,
     onSearchChange: (String) -> Unit,
     onFilterChange: (PriorityFilter) -> Unit,
     onToggleComplete: (Task, Boolean) -> Unit,
     onDelete: (Task) -> Unit,
+    onToggleSelect: (Long) -> Unit,
+    onClearSelection: () -> Unit,
+    onBulkComplete: () -> Unit,
+    onBulkDeleteRequest: () -> Unit,
     onAddTask: () -> Unit,
     onEditTask: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -143,22 +195,35 @@ fun TasksContent(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            PriorityFilterRow(
-                counts = state.counts,
-                selected = state.selectedFilter,
-                onSelect = onFilterChange,
-                modifier = Modifier.padding(
-                    horizontal = spacing.md,
-                    vertical = spacing.sm,
-                ),
-            )
-            TaskSearchField(
-                onSearch = onSearchChange,
-                modifier = Modifier.padding(
-                    horizontal = spacing.md,
-                    vertical = spacing.sm,
-                ),
-            )
+            if (selection.isActive) {
+                SelectionBar(
+                    count = selection.count,
+                    onComplete = onBulkComplete,
+                    onDelete = onBulkDeleteRequest,
+                    onClose = onClearSelection,
+                    modifier = Modifier.padding(
+                        horizontal = spacing.md,
+                        vertical = spacing.sm,
+                    ),
+                )
+            } else {
+                PriorityFilterRow(
+                    counts = state.counts,
+                    selected = state.selectedFilter,
+                    onSelect = onFilterChange,
+                    modifier = Modifier.padding(
+                        horizontal = spacing.md,
+                        vertical = spacing.sm,
+                    ),
+                )
+                TaskSearchField(
+                    onSearch = onSearchChange,
+                    modifier = Modifier.padding(
+                        horizontal = spacing.md,
+                        vertical = spacing.sm,
+                    ),
+                )
+            }
 
             when {
                 state.isLoading -> LoadingState()
@@ -169,10 +234,12 @@ fun TasksContent(
                 )
 
                 else -> TaskList(
-                    state = state,
+                    tasks = state.tasks,
                     listState = listState,
+                    selection = selection,
                     onToggleComplete = onToggleComplete,
                     onDelete = onDelete,
+                    onToggleSelect = onToggleSelect,
                     onEditTask = onEditTask,
                 )
             }
@@ -183,10 +250,12 @@ fun TasksContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TaskList(
-    state: TasksListUiState,
+    tasks: ImmutableList<Task>,
     listState: LazyListState,
+    selection: TaskSelection,
     onToggleComplete: (Task, Boolean) -> Unit,
     onDelete: (Task) -> Unit,
+    onToggleSelect: (Long) -> Unit,
     onEditTask: (Long) -> Unit,
 ) {
     LazyColumn(
@@ -201,7 +270,7 @@ private fun TaskList(
         modifier = Modifier.fillMaxSize(),
     ) {
         // Stable key = item identity (not position): preserves per-item state across reorder.
-        items(items = state.tasks, key = { it.id }) { task ->
+        items(items = tasks, key = { it.id }) { task ->
             val dismissState = rememberSwipeToDismissBoxState()
             LaunchedEffect(dismissState.currentValue) {
                 if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
@@ -215,6 +284,7 @@ private fun TaskList(
                 state = dismissState,
                 modifier = Modifier.animateItem(),
                 enableDismissFromStartToEnd = false,
+                enableDismissFromEndToStart = !selection.isActive,
                 backgroundContent = {
                     Surface(
                         color = MaterialTheme.colorScheme.errorContainer,
@@ -241,6 +311,9 @@ private fun TaskList(
                     task = task,
                     onToggleComplete = { completed -> onToggleComplete(task, completed) },
                     onEdit = { onEditTask(task.id) },
+                    selected = task.id in selection.ids,
+                    selectionActive = selection.isActive,
+                    onToggleSelect = { onToggleSelect(task.id) },
                 )
             }
         }

@@ -1,8 +1,10 @@
 package com.venturedive.tasksapp.feature.taskedit
 
+import androidx.compose.runtime.Immutable
 import com.venturedive.tasksapp.domain.model.Priority
 
 // Immutable UiState - single source of truth for the screen.
+@Immutable
 data class TaskEditUiState(
     val taskId: Long? = null,
     val title: String = "",

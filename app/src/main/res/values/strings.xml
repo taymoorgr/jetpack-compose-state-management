@@ -30,4 +30,13 @@
     <string name="priority_low">Low</string>
     <string name="priority_medium">Medium</string>
     <string name="priority_high">High</string>
+
+    <!-- Multi-select -->
+    <string name="selection_count">%1$d selected</string>
+    <string name="action_complete_selected">Mark selected complete</string>
+    <string name="action_delete_selected">Delete selected</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="bulk_delete_title">Delete tasks?</string>
+    <string name="bulk_delete_message">Delete %1$d selected task(s)?</string>
 </resources>

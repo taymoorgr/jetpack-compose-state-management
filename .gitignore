@@ -5,6 +5,7 @@
 /.claude
 /.kotlin
 .DS_Store
+/docs
 /build
 /app/build
 /captures

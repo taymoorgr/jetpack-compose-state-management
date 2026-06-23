@@ -1,7 +1,9 @@
 package com.venturedive.tasksapp.feature.tasks.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -47,29 +49,36 @@ private val EditIconColor = Color(0xFFE65100)
 
 // State categories: completion is business state (hoisted, toggled via callback); `expanded` is
 // local UI-element state in rememberSaveable that follows its item via the stable LazyColumn key.
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TaskRow(
     task: Task,
     onToggleComplete: (Boolean) -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
+    selected: Boolean = false,
+    selectionActive: Boolean = false,
+    onToggleSelect: () -> Unit = {},
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val darkTheme = MaterialTheme.colorScheme.surface.luminance() < 0.5f
 
     Surface(
-        onClick = { expanded = !expanded },
         shape = MaterialTheme.shapes.medium,
-        color = if (darkTheme) {
-            MaterialTheme.colorScheme.surface
-        } else {
-            MaterialTheme.colorScheme.surfaceContainerLowest
+        color = when {
+            selected -> MaterialTheme.colorScheme.primaryContainer
+            darkTheme -> MaterialTheme.colorScheme.surface
+            else -> MaterialTheme.colorScheme.surfaceContainerLowest
         },
         tonalElevation = if (darkTheme) 1.dp else 0.dp,
         shadowElevation = 2.dp,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = { if (selectionActive) onToggleSelect() else expanded = !expanded },
+                onLongClick = onToggleSelect,
+            ),
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             Box(
@@ -80,20 +89,41 @@ fun TaskRow(
             )
             Column(modifier = Modifier.padding(spacing.sm)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconToggleButton(
-                        checked = task.isCompleted,
-                        onCheckedChange = onToggleComplete,
-                    ) {
-                        Icon(
-                            imageVector = if (task.isCompleted) {
-                                Icons.Rounded.CheckCircle
-                            } else {
-                                Icons.Rounded.RadioButtonUnchecked
-                            },
-                            contentDescription =
-                                if (task.isCompleted) "Mark incomplete" else "Mark complete",
-                            tint = if (task.isCompleted) CompletedGreen else MaterialTheme.colorScheme.outline,
-                        )
+                    if (selectionActive) {
+                        Box(
+                            modifier = Modifier.size(48.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = if (selected) {
+                                    Icons.Rounded.CheckCircle
+                                } else {
+                                    Icons.Rounded.RadioButtonUnchecked
+                                },
+                                contentDescription = null,
+                                tint = if (selected) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.outline
+                                },
+                            )
+                        }
+                    } else {
+                        IconToggleButton(
+                            checked = task.isCompleted,
+                            onCheckedChange = onToggleComplete,
+                        ) {
+                            Icon(
+                                imageVector = if (task.isCompleted) {
+                                    Icons.Rounded.CheckCircle
+                                } else {
+                                    Icons.Rounded.RadioButtonUnchecked
+                                },
+                                contentDescription =
+                                    if (task.isCompleted) "Mark incomplete" else "Mark complete",
+                                tint = if (task.isCompleted) CompletedGreen else MaterialTheme.colorScheme.outline,
+                            )
+                        }
                     }
                     Column(
                         modifier = Modifier
@@ -107,23 +137,25 @@ fun TaskRow(
                         )
                         PriorityPill(task.priority)
                     }
-                    Surface(
-                        onClick = onEdit,
-                        shape = CircleShape,
-                        color = EditIconContainer,
-                        contentColor = EditIconColor,
-                        modifier = Modifier.size(30.dp),
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Icon(
-                                Icons.Rounded.Edit,
-                                contentDescription = "Edit task",
-                                modifier = Modifier.size(20.dp),
-                            )
+                    if (!selectionActive) {
+                        Surface(
+                            onClick = onEdit,
+                            shape = CircleShape,
+                            color = EditIconContainer,
+                            contentColor = EditIconColor,
+                            modifier = Modifier.size(30.dp),
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    Icons.Rounded.Edit,
+                                    contentDescription = "Edit task",
+                                    modifier = Modifier.size(20.dp),
+                                )
+                            }
                         }
                     }
                 }
-                AnimatedVisibility(visible = expanded) {
+                AnimatedVisibility(visible = expanded && !selectionActive) {
                     Text(
                         text = task.description.ifBlank { "No description" },
                         style = MaterialTheme.typography.bodyMedium,

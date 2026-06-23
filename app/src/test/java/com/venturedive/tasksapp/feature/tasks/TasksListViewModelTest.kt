@@ -23,7 +23,11 @@ class TasksListViewModelTest {
     private val taskRepository = FakeTaskRepository()
     private val preferencesRepository = FakePreferencesRepository()
 
-    private fun viewModel() = TasksListViewModel(taskRepository, preferencesRepository)
+    private fun viewModel() =
+        TasksListViewModel(
+            preferencesRepository = preferencesRepository,
+            taskRepository = taskRepository
+        )
 
     private fun task(
         id: Long,
