@@ -1,4 +1,4 @@
-package com.venturedive.tasksapp
+package com.venturedive.tasksapp.ui
 
 import android.app.Activity
 import android.os.Bundle
@@ -18,8 +18,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.venturedive.tasksapp.core.designsystem.theme.TasksAppTheme
 import com.venturedive.tasksapp.domain.model.ThemeMode
 import com.venturedive.tasksapp.feature.landing.LandingScreen
-import com.venturedive.tasksapp.ui.AppViewModel
-import com.venturedive.tasksapp.ui.TasksApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,8 +26,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val appViewModel: AppViewModel = hiltViewModel()
-            val themeMode by appViewModel.themeMode.collectAsStateWithLifecycle()
+            val mainViewModel: MainViewModel = hiltViewModel()
+            val themeMode by mainViewModel.themeMode.collectAsStateWithLifecycle()
             val darkTheme = when (themeMode) {
                 ThemeMode.LIGHT -> false
                 ThemeMode.DARK -> true

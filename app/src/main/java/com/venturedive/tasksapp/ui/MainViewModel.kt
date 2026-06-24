@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 /** map{}.stateIn(WhileSubscribed) exposes the theme preference read-only; it drives the app theme. */
 @HiltViewModel
-class AppViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository,
 ) : ViewModel() {
 
