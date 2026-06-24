@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-/** map{}.stateIn(WhileSubscribed) exposes the theme preference read-only; this state drives the app theme (state -> UI). */
+/** map{}.stateIn(WhileSubscribed) exposes the theme preference read-only; it drives the app theme. */
 @HiltViewModel
 class AppViewModel @Inject constructor(
     preferencesRepository: PreferencesRepository,

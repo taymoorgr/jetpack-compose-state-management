@@ -17,12 +17,11 @@ data class TasksListUiState(
     val sortOrder: SortOrder = SortOrder.CREATED_DESC,
     val hideCompleted: Boolean = false,
 ) {
-    // Derived property: computed from source fields, never stored as duplicate state.
+    // Derived property: computed from source fields, never stored.
     val isEmpty: Boolean get() = !isLoading && tasks.isEmpty()
 }
 
-// Per-filter task counts for the filter chips - derived in the ViewModel from the
-// (search + hide-completed)-filtered list, before the selected priority narrows it further.
+// Per-filter counts for the chips: derived in the ViewModel, never stored.
 @Immutable
 data class PriorityCounts(
     val all: Int = 0,

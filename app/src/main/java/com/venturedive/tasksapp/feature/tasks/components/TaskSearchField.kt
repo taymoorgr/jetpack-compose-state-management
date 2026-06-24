@@ -25,8 +25,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.time.Duration.Companion.milliseconds
 
-// Local UI state in rememberSaveable (survives rotation/process death); snapshotFlow turns that
-// Compose state read into a Flow so we can debounce - one query per pause, not per keystroke.
+// rememberSaveable query + snapshotFlow -> Flow, debounced: one query per pause, not per keystroke.
 @OptIn(FlowPreview::class)
 @Composable
 fun TaskSearchField(

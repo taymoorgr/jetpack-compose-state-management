@@ -23,8 +23,7 @@ import com.venturedive.tasksapp.core.designsystem.theme.spacing
 import com.venturedive.tasksapp.feature.tasks.PriorityCounts
 import com.venturedive.tasksapp.feature.tasks.PriorityFilter
 
-// Stateless filter row (UDF): the selected filter + counts come down as state, taps go up via
-// onSelect. It holds no state of its own - the ViewModel's combine stays the single source of truth.
+// Stateless filter row (UDF): filter + counts come down, taps go up via onSelect; holds no state.
 @Composable
 fun PriorityFilterRow(
     counts: PriorityCounts,

@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val LandingDurationMillis = 1_500L
 
-/** rememberUpdatedState: the one-shot LaunchedEffect(Unit) must not restart yet must call the LATEST onTimeout. */
+/** rememberUpdatedState: the one-shot LaunchedEffect(Unit) still calls the LATEST onTimeout. */
 @Composable
 fun LandingScreen(
     onTimeout: () -> Unit,

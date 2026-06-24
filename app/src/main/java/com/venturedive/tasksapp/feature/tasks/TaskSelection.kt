@@ -3,8 +3,7 @@ package com.venturedive.tasksapp.feature.tasks
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.saveable.Saver
 
-// @Immutable: ids is only ever replaced (copy()), never mutated in place, so the promise holds -
-// this keeps composables that take a TaskSelection (TasksContent, TaskList) skippable.
+// @Immutable: ids is only ever replaced, never mutated, so composables taking it can skip.
 @Immutable
 data class TaskSelection(val ids: Set<Long> = emptySet()) {
     val count: Int get() = ids.size
@@ -16,8 +15,7 @@ data class TaskSelection(val ids: Set<Long> = emptySet()) {
     fun clear(): TaskSelection = TaskSelection()
 
     companion object {
-        // Custom Saver: serializes the selection to a Bundle-saveable LongArray so rememberSaveable
-        // can persist this non-primitive UI state across config changes and process death.
+        // Custom Saver: maps selection to a LongArray so rememberSaveable persists it across recreation.
         val Saver: Saver<TaskSelection, LongArray> = Saver(
             save = { it.ids.toLongArray() },
             restore = { TaskSelection(it.toSet()) },

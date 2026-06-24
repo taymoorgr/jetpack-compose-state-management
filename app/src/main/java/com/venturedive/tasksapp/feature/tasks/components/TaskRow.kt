@@ -47,8 +47,7 @@ private val CompletedGreen = Color(0xFF4CAF50)
 private val EditIconContainer = Color(0xFFFFE0B2)
 private val EditIconColor = Color(0xFFE65100)
 
-// State categories: completion is business state (hoisted, toggled via callback); `expanded` is
-// local UI-element state in rememberSaveable that follows its item via the stable LazyColumn key.
+// Completion = hoisted business state (callback); `expanded` = local UI state in rememberSaveable.
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TaskRow(

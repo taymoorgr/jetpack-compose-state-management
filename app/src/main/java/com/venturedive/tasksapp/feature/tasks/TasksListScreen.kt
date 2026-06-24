@@ -73,8 +73,7 @@ fun TasksScreen(
     val deletedMessage = stringResource(R.string.task_deleted)
     val undoLabel = stringResource(R.string.action_undo)
 
-    // Selection is transient UI state, so it's held here via rememberSaveable + the custom Saver
-    // (TaskSelection.Saver) - not in the ViewModel.
+    // Transient UI state: held via rememberSaveable + the custom Saver, not in the ViewModel.
     var selection by rememberSaveable(stateSaver = TaskSelection.Saver) {
         mutableStateOf(
             TaskSelection()
@@ -269,14 +268,13 @@ private fun TaskList(
         verticalArrangement = Arrangement.spacedBy(spacing.sm),
         modifier = Modifier.fillMaxSize(),
     ) {
-        // Stable key = item identity (not position): preserves per-item state across reorder.
+        // Stable key = item identity, not position: per-item state survives reorder.
         items(items = tasks, key = { it.id }) { task ->
             val dismissState = rememberSwipeToDismissBoxState()
             LaunchedEffect(dismissState.currentValue) {
                 if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
                     onDelete(task)
-                    // Stable key means an undone row reuses this state holder; reset it so the
-                    // restored "dismissed" value doesn't immediately re-fire delete.
+                    // Undo reuses this holder (stable key), so reset it or it re-fires delete.
                     dismissState.snapTo(SwipeToDismissBoxValue.Settled)
                 }
             }

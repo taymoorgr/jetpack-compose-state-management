@@ -25,32 +25,28 @@ class TasksListViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    // Screen state: the applied query, held as MutableStateFlow and exposed only indirectly.
+    // Screen state: the search query as a MutableStateFlow, fed into combine below.
     private val searchQuery = MutableStateFlow("")
 
-    // Screen state: the selected priority filter - same shape as the query. A whole new filter
-    // feature is just one more MutableStateFlow + one more combine source below.
+    // Screen state: the priority filter. A new feature = +1 MutableStateFlow, +1 combine source.
     private val priorityFilter = MutableStateFlow(PriorityFilter.ALL)
 
     // One-time events via Channel (not state): each effect is consumed exactly once.
     private val eventChannel = Channel<TasksListEvent>(Channel.BUFFERED)
     val events = eventChannel.receiveAsFlow()
 
-    // combine(...) folds every source - tasks, prefs, query, and now the filter - into one UiState,
-    // then stateIn(WhileSubscribed) keeps it warm only while the UI collects; the read-only StateFlow
-    // stays the single source of truth. A new filter dimension = +1 source here, +1 field in UiState.
+    // combine folds all sources into one UiState, exposed read-only via stateIn(WhileSubscribed).
     val uiState: StateFlow<TasksListUiState> = combine(
         taskRepository.observeTasks(),
         preferencesRepository.userPreferences,
         searchQuery,
         priorityFilter,
     ) { tasks, preferences, query, filter ->
-        // Narrow by everything except priority first, so the chip counts reflect the current
-        // search / hide-completed context.
+        // Filter by everything except priority first, so the counts reflect that context.
         val matched = tasks
             .filter { !preferences.hideCompleted || !it.isCompleted }
             .filter { query.isBlank() || it.title.contains(query, ignoreCase = true) }
-        // Derived counts: computed from that list on every emission, never stored as separate state.
+        // Derived counts: computed each emission, never stored.
         val counts = PriorityCounts(
             all = matched.size,
             low = matched.count { it.priority == Priority.LOW },
