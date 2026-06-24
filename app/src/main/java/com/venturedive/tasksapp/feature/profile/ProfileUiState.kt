@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 // Immutable UiState (@Immutable) - single source of truth for the screen.
 @Immutable
 data class ProfileUiState(
+    val id: Long = 0,
     val name: String = "",
     val email: String = "",
     val bio: String = "",

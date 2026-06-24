@@ -36,18 +36,20 @@ class TaskEditViewModel @Inject constructor(
     val events = eventChannel.receiveAsFlow()
 
     init {
-        if (taskId != null) {
-            viewModelScope.launch {
-                repository.observeTask(taskId).first()?.let { task ->
-                    _uiState.update {
-                        it.copy(
-                            title = task.title,
-                            description = task.description,
-                            priority = task.priority,
-                            isCompleted = task.isCompleted,
-                            createdAt = task.createdAt,
-                        )
-                    }
+        taskId?.let { loadTask(it) }
+    }
+
+    private fun loadTask(taskId: Long) {
+        viewModelScope.launch {
+            repository.observeTask(taskId).first()?.let { task ->
+                _uiState.update {
+                    it.copy(
+                        title = task.title,
+                        description = task.description,
+                        priority = task.priority,
+                        isCompleted = task.isCompleted,
+                        createdAt = task.createdAt,
+                    )
                 }
             }
         }

@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// Private MutableStateFlow, exposed read-only via asStateFlow; updated immutably with update { copy(...) }.
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val repository: ProfileRepository,
@@ -29,14 +28,16 @@ class ProfileViewModel @Inject constructor(
     private val eventChannel = Channel<ProfileEvent>(Channel.BUFFERED)
     val events = eventChannel.receiveAsFlow()
 
-    private var loaded: Profile? = null
-
     init {
+        loadProfile()
+    }
+
+    private fun loadProfile() {
         viewModelScope.launch {
             val profile = repository.observeProfile().filterNotNull().first()
-            loaded = profile
             _uiState.update {
                 it.copy(
+                    id = profile.id,
                     name = profile.name,
                     email = profile.email,
                     bio = profile.bio,
@@ -60,12 +61,12 @@ class ProfileViewModel @Inject constructor(
 
     fun onSave() {
         val state = _uiState.value
-        val base = loaded
-        if (!state.canSave || base == null) return
+        if (!state.canSave) return
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
             repository.updateProfile(
-                base.copy(
+                Profile(
+                    id = _uiState.value.id,
                     name = state.name.trim(),
                     email = state.email.trim(),
                     bio = state.bio.trim(),

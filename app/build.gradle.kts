@@ -38,7 +38,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // AGP 9 exposes the Kotlin DSL via the built-in Kotlin support.
     kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_17
@@ -57,7 +56,6 @@ android {
 
     testOptions {
         unitTests {
-            // Robolectric needs the merged Android resources/manifest for Compose UI tests.
             isIncludeAndroidResources = true
         }
     }
@@ -99,7 +97,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
-    // Robolectric + Compose UI test - runs the StateRestorationTester survival test on the JVM.
+    // Robolectric + Compose UI test
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.junit)
