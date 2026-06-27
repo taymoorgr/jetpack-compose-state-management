@@ -11,5 +11,5 @@ data class TaskEntity(
     val description: String = "",
     val isCompleted: Boolean = false,
     val priority: Priority = Priority.MEDIUM,
-    val createdAt: Long,
+    val createdAt: Long
 )

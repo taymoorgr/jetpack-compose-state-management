@@ -7,5 +7,5 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK }
 data class UserPreferences(
     val sortOrder: SortOrder = SortOrder.CREATED_DESC,
     val hideCompleted: Boolean = false,
-    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM
 )

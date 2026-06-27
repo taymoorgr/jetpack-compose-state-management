@@ -34,16 +34,15 @@ import com.venturedive.tasksapp.domain.model.UserPreferences
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = hiltViewModel(),
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    // collectAsStateWithLifecycle at the screen edge: state down, events up.
     val preferences by viewModel.preferences.collectAsStateWithLifecycle()
     SettingsContent(
         preferences = preferences,
         onSortOrderChange = viewModel::onSortOrderChange,
         onHideCompletedChange = viewModel::onHideCompletedChange,
         onThemeModeChange = viewModel::onThemeModeChange,
-        modifier = modifier,
+        modifier = modifier
     )
 }
 
@@ -54,14 +53,14 @@ fun SettingsContent(
     onSortOrderChange: (SortOrder) -> Unit,
     onHideCompletedChange: (Boolean) -> Unit,
     onThemeModeChange: (ThemeMode) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(vertical = spacing.sm),
-        verticalArrangement = Arrangement.spacedBy(spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(spacing.sm)
     ) {
         SectionHeader(stringResource(R.string.settings_appearance))
         TasksAppCard(modifier = Modifier.padding(horizontal = spacing.md)) {
@@ -74,7 +73,7 @@ fun SettingsContent(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index,
                                 ThemeMode.entries.size
-                            ),
+                            )
                         ) { Text(mode.label()) }
                     }
                 }
@@ -92,7 +91,7 @@ fun SettingsContent(
                             shape = SegmentedButtonDefaults.itemShape(
                                 index,
                                 SortOrder.entries.size
-                            ),
+                            )
                         ) { Text(order.label()) }
                     }
                 }
@@ -102,15 +101,15 @@ fun SettingsContent(
                     .fillMaxWidth()
                     .clickable { onHideCompletedChange(!preferences.hideCompleted) },
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = stringResource(R.string.settings_hide_completed),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Switch(
                     checked = preferences.hideCompleted,
-                    onCheckedChange = onHideCompletedChange,
+                    onCheckedChange = onHideCompletedChange
                 )
             }
         }
@@ -123,7 +122,7 @@ private fun PreferenceGroup(label: String, content: @Composable () -> Unit) {
         Text(
             text = label,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         content()
     }

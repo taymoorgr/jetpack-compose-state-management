@@ -25,12 +25,11 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.time.Duration.Companion.milliseconds
 
-// rememberSaveable query + snapshotFlow -> Flow, debounced: one query per pause, not per keystroke.
 @OptIn(FlowPreview::class)
 @Composable
 fun TaskSearchField(
     onSearch: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     LaunchedEffect(Unit) {
@@ -69,8 +68,8 @@ fun TaskSearchField(
             cursorColor = MaterialTheme.colorScheme.primary,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
         ),
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
     )
 }

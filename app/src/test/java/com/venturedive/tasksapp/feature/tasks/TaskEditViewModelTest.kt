@@ -57,9 +57,8 @@ class TaskEditViewModelTest {
                     priority = Priority.HIGH,
                     createdAt = 1
                 )
-            ),
+            )
         )
-        // SavedStateHandle exposes the nav arg by key "taskId"; the ViewModel reads it to load edit state.
         val viewModel = TaskEditViewModel(repository, SavedStateHandle(mapOf("taskId" to 7L)))
 
         viewModel.uiState.test {

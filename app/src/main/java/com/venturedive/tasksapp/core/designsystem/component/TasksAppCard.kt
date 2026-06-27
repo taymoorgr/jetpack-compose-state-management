@@ -16,7 +16,7 @@ import com.venturedive.tasksapp.core.designsystem.theme.spacing
 @Composable
 fun TasksAppCard(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val darkTheme = MaterialTheme.colorScheme.surface.luminance() < 0.5f
     Surface(
@@ -28,12 +28,12 @@ fun TasksAppCard(
         },
         tonalElevation = if (darkTheme) 1.dp else 0.dp,
         shadowElevation = 2.dp,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier.padding(spacing.md),
             verticalArrangement = Arrangement.spacedBy(spacing.md),
-            content = content,
+            content = content
         )
     }
 }

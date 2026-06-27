@@ -47,9 +47,8 @@ import com.venturedive.tasksapp.feature.profile.components.ProfileAvatar
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
-    // collectAsStateWithLifecycle: observe StateFlow, stop when not started.
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val savedMessage = stringResource(R.string.profile_saved)
@@ -70,11 +69,10 @@ fun ProfileScreen(
         onBioChange = viewModel::onBioChange,
         onAvatarChange = viewModel::onAvatarChange,
         onSave = viewModel::onSave,
-        modifier = modifier,
+        modifier = modifier
     )
 }
 
-// Stateless Content: state down, events up - UI is f(state).
 @Composable
 fun ProfileContent(
     state: ProfileUiState,
@@ -84,12 +82,12 @@ fun ProfileContent(
     onBioChange: (String) -> Unit,
     onAvatarChange: (String?) -> Unit,
     onSave: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         if (state.isLoading) {
             LoadingState(modifier = Modifier.padding(innerPadding))
@@ -110,26 +108,26 @@ fun ProfileContent(
                     .imePadding()
                     .padding(spacing.md),
                 verticalArrangement = Arrangement.spacedBy(spacing.md),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ProfileHeader(
                     name = state.name,
                     email = state.email,
                     avatarUri = state.avatarUri,
-                    onAvatarChange = onAvatarChange,
+                    onAvatarChange = onAvatarChange
                 )
                 TasksAppCard {
                     Text(
                         text = "Account details",
                         style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     ValidatedTextField(
                         value = state.name,
                         onValueChange = onNameChange,
                         label = "Name",
                         error = nameError,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     ValidatedTextField(
                         value = state.email,
@@ -137,26 +135,26 @@ fun ProfileContent(
                         label = "Email",
                         error = emailError,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = state.bio,
                         onValueChange = onBioChange,
                         label = { Text("Bio") },
                         minLines = 3,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
                 Button(
                     onClick = onSave,
                     enabled = state.canSave,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     if (state.isSaving) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     } else {
                         Text("Save")
@@ -172,30 +170,30 @@ private fun ProfileHeader(
     name: String,
     email: String,
     avatarUri: String?,
-    onAvatarChange: (String?) -> Unit,
+    onAvatarChange: (String?) -> Unit
 ) {
     TasksAppCard {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(spacing.sm)
         ) {
             Box(contentAlignment = Alignment.BottomEnd) {
                 ProfileAvatar(
                     avatarUri = avatarUri,
-                    onAvatarChange = onAvatarChange,
+                    onAvatarChange = onAvatarChange
                 )
                 Surface(
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(28.dp),
+                    modifier = Modifier.size(28.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Rounded.PhotoCamera,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp),
+                            modifier = Modifier.size(16.dp)
                         )
                     }
                 }
@@ -203,12 +201,12 @@ private fun ProfileHeader(
             Text(
                 text = name,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Bold
             )
             Text(
                 text = email,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

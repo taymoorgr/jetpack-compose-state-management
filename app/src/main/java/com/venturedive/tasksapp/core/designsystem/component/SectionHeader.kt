@@ -12,7 +12,7 @@ import com.venturedive.tasksapp.core.designsystem.theme.spacing
 @Composable
 fun SectionHeader(
     text: String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Text(
         text = text,
@@ -20,8 +20,8 @@ fun SectionHeader(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(
             horizontal = spacing.md,
-            vertical = spacing.sm,
-        ),
+            vertical = spacing.sm
+        )
     )
 }
 

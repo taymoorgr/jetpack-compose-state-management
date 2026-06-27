@@ -25,50 +25,44 @@ class TasksListViewModel @Inject constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    // Screen state: the search query as a MutableStateFlow, fed into combine below.
     private val searchQuery = MutableStateFlow("")
 
-    // Screen state: the priority filter. A new feature = +1 MutableStateFlow, +1 combine source.
     private val priorityFilter = MutableStateFlow(PriorityFilter.ALL)
 
-    // One-time events via Channel (not state): each effect is consumed exactly once.
     private val eventChannel = Channel<TasksListEvent>(Channel.BUFFERED)
     val events = eventChannel.receiveAsFlow()
 
-    // combine folds all sources into one UiState, exposed read-only via stateIn(WhileSubscribed).
     val uiState: StateFlow<TasksListUiState> = combine(
         taskRepository.observeTasks(),
         preferencesRepository.userPreferences,
         searchQuery,
-        priorityFilter,
+        priorityFilter
     ) { tasks, preferences, query, filter ->
-        // Filter by everything except priority first, so the counts reflect that context.
-        val matched = tasks
+        val filteredTasks = tasks
             .filter { !preferences.hideCompleted || !it.isCompleted }
             .filter { query.isBlank() || it.title.contains(query, ignoreCase = true) }
-        // Derived counts: computed each emission, never stored.
         val counts = PriorityCounts(
-            all = matched.size,
-            low = matched.count { it.priority == Priority.LOW },
-            medium = matched.count { it.priority == Priority.MEDIUM },
-            high = matched.count { it.priority == Priority.HIGH },
+            all = filteredTasks.size,
+            low = filteredTasks.count { it.priority == Priority.LOW },
+            medium = filteredTasks.count { it.priority == Priority.MEDIUM },
+            high = filteredTasks.count { it.priority == Priority.HIGH }
         )
-        val visible = matched
+        val tasksToDisplay = filteredTasks
             .filter { filter == PriorityFilter.ALL || it.priority == filter.priority }
             .sortedWith(comparatorFor(preferences.sortOrder))
         TasksListUiState(
-            tasks = visible.toImmutableList(),
+            tasks = tasksToDisplay.toImmutableList(),
             isLoading = false,
             searchQuery = query,
             selectedFilter = filter,
             counts = counts,
             sortOrder = preferences.sortOrder,
-            hideCompleted = preferences.hideCompleted,
+            hideCompleted = preferences.hideCompleted
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = TasksListUiState(isLoading = true),
+        initialValue = TasksListUiState(isLoading = true)
     )
 
     fun onSearchChange(query: String) {

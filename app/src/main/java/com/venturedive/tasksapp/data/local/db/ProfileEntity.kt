@@ -11,5 +11,5 @@ data class ProfileEntity(
     val name: String,
     val email: String,
     val bio: String = "",
-    val avatarUri: String? = null,
+    val avatarUri: String? = null
 )

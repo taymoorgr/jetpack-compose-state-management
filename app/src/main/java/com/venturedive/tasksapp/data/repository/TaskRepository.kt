@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-/** Source of truth for tasks; exposes durable data as a [Flow] for ViewModels to collect. */
 interface TaskRepository {
     fun observeTasks(): Flow<List<Task>>
     fun observeTask(id: Long): Flow<Task?>
@@ -24,7 +23,7 @@ interface TaskRepository {
 
 class TaskRepositoryImpl @Inject constructor(
     private val dao: TaskDao,
-    @IoDispatcher private val io: CoroutineDispatcher,
+    @IoDispatcher private val io: CoroutineDispatcher
 ) : TaskRepository {
 
     override fun observeTasks(): Flow<List<Task>> =
@@ -40,8 +39,8 @@ class TaskRepositoryImpl @Inject constructor(
                     title = title,
                     description = description,
                     priority = priority,
-                    createdAt = System.currentTimeMillis(),
-                ),
+                    createdAt = System.currentTimeMillis()
+                )
             )
         }
 

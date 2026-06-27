@@ -25,11 +25,10 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val LandingDurationMillis = 1_500L
 
-/** rememberUpdatedState: the one-shot LaunchedEffect(Unit) still calls the LATEST onTimeout. */
 @Composable
 fun LandingScreen(
     onTimeout: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val currentOnTimeout by rememberUpdatedState(onTimeout)
 
@@ -44,13 +43,13 @@ fun LandingScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(spacing.lg))
         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)

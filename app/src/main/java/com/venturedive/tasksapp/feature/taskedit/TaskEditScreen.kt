@@ -43,9 +43,8 @@ import com.venturedive.tasksapp.domain.model.Priority
 fun TaskEditScreen(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TaskEditViewModel = hiltViewModel(),
+    viewModel: TaskEditViewModel = hiltViewModel()
 ) {
-    // collectAsStateWithLifecycle: observe StateFlow, stop when not started.
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffectSaved(viewModel = viewModel, onDone = onDone)
@@ -57,7 +56,7 @@ fun TaskEditScreen(
         onPriorityChange = viewModel::onPriorityChange,
         onSave = viewModel::onSave,
         onBack = onDone,
-        modifier = modifier,
+        modifier = modifier
     )
 }
 
@@ -72,7 +71,6 @@ private fun LaunchedEffectSaved(viewModel: TaskEditViewModel, onDone: () -> Unit
     }
 }
 
-// Stateless Content: state down, events up - UI is f(state).
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskEditContent(
@@ -82,7 +80,7 @@ fun TaskEditContent(
     onPriorityChange: (Priority) -> Unit,
     onSave: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier,
@@ -95,10 +93,10 @@ fun TaskEditContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
-        },
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -107,7 +105,7 @@ fun TaskEditContent(
                 .verticalScroll(rememberScrollState())
                 .imePadding()
                 .padding(spacing.md),
-            verticalArrangement = Arrangement.spacedBy(spacing.md),
+            verticalArrangement = Arrangement.spacedBy(spacing.md)
         ) {
             TasksAppCard {
                 OutlinedTextField(
@@ -116,14 +114,14 @@ fun TaskEditContent(
                     label = { Text("Title") },
                     singleLine = true,
                     isError = state.title.isBlank(),
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = state.description,
                     onValueChange = onDescriptionChange,
                     label = { Text("Description") },
                     minLines = 3,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(spacing.sm)) {
                     Text("Priority", style = MaterialTheme.typography.labelLarge)
@@ -135,8 +133,8 @@ fun TaskEditContent(
                                 label = { Text(priority.label()) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = priority.containerColor(),
-                                    selectedLabelColor = priority.contentColor(),
-                                ),
+                                    selectedLabelColor = priority.contentColor()
+                                )
                             )
                         }
                     }
@@ -145,13 +143,13 @@ fun TaskEditContent(
             Button(
                 onClick = onSave,
                 enabled = state.canSave,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 if (state.isSaving) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
                     Text("Save")

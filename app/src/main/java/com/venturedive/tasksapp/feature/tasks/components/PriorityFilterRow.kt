@@ -23,17 +23,16 @@ import com.venturedive.tasksapp.core.designsystem.theme.spacing
 import com.venturedive.tasksapp.feature.tasks.PriorityCounts
 import com.venturedive.tasksapp.feature.tasks.PriorityFilter
 
-// Stateless filter row (UDF): filter + counts come down, taps go up via onSelect; holds no state.
 @Composable
 fun PriorityFilterRow(
     counts: PriorityCounts,
     selected: PriorityFilter,
     onSelect: (PriorityFilter) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+        horizontalArrangement = Arrangement.spacedBy(spacing.sm)
     ) {
         PriorityFilter.entries.forEach { filter ->
             PriorityFilterChip(
@@ -43,7 +42,7 @@ fun PriorityFilterRow(
                 content = filter.contentColor(),
                 selected = filter == selected,
                 onClick = { onSelect(filter) },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
             )
         }
     }
@@ -58,7 +57,7 @@ private fun PriorityFilterChip(
     content: Color,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         onClick = onClick,
@@ -66,21 +65,21 @@ private fun PriorityFilterChip(
         color = container,
         contentColor = content,
         border = if (selected) BorderStroke(2.dp, content) else null,
-        modifier = modifier,
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier.padding(
                 horizontal = spacing.sm,
-                vertical = spacing.md,
+                vertical = spacing.md
             ),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = count.toString(), style = MaterialTheme.typography.titleLarge)
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

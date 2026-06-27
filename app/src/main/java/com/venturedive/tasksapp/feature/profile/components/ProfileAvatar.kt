@@ -35,25 +35,24 @@ import kotlinx.coroutines.withContext
 fun ProfileAvatar(
     avatarUri: String?,
     onAvatarChange: (String?) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
 
     val picker = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia(),
+        ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
             runCatching {
                 context.contentResolver.takePersistableUriPermission(
                     uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
             }
             onAvatarChange(uri.toString())
         }
     }
 
-    // produceState: async work -> observable State; re-runs when key (avatarUri) changes.
     val imageBitmap: ImageBitmap? by produceState(initialValue = null, key1 = avatarUri) {
         value = avatarUri?.let { uriString ->
             withContext(Dispatchers.IO) {
@@ -73,22 +72,22 @@ fun ProfileAvatar(
             .background(MaterialTheme.colorScheme.primaryContainer)
             .clickable {
                 picker.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
             },
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         imageBitmap?.let {
             Image(
                 bitmap = it,
                 contentDescription = "Profile photo",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(96.dp),
+                modifier = Modifier.size(96.dp)
             )
         } ?: Icon(
             imageVector = Icons.Rounded.AddAPhoto,
             contentDescription = "Pick a profile photo",
-            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            tint = MaterialTheme.colorScheme.onPrimaryContainer
         )
     }
 }

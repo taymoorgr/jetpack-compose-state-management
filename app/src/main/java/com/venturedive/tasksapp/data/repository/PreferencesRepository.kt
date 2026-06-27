@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-/** Source of truth for user preferences; exposes them as a [Flow] for ViewModels to collect. */
 interface PreferencesRepository {
     val userPreferences: Flow<UserPreferences>
     suspend fun setSortOrder(order: SortOrder)
@@ -24,7 +23,7 @@ interface PreferencesRepository {
 }
 
 class PreferencesRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
+    private val dataStore: DataStore<Preferences>
 ) : PreferencesRepository {
 
     private object Keys {
@@ -40,7 +39,7 @@ class PreferencesRepositoryImpl @Inject constructor(
                 sortOrder = prefs[Keys.SORT_ORDER]?.let(SortOrder::valueOf)
                     ?: SortOrder.CREATED_DESC,
                 hideCompleted = prefs[Keys.HIDE_COMPLETED] ?: false,
-                themeMode = prefs[Keys.THEME_MODE]?.let(ThemeMode::valueOf) ?: ThemeMode.SYSTEM,
+                themeMode = prefs[Keys.THEME_MODE]?.let(ThemeMode::valueOf) ?: ThemeMode.SYSTEM
             )
         }
 

@@ -34,7 +34,7 @@ class TasksListViewModelTest {
         title: String,
         completed: Boolean = false,
         createdAt: Long = id,
-        priority: Priority = Priority.MEDIUM,
+        priority: Priority = Priority.MEDIUM
     ) = Task(
         id = id,
         title = title,
@@ -117,12 +117,11 @@ class TasksListViewModelTest {
     @Test
     fun hideCompleted_filtersOutCompletedTasks() = runTest {
         taskRepository.setTasks(
-            listOf(task(1, "Active", completed = false), task(2, "Done", completed = true)),
+            listOf(task(1, "Active", completed = false), task(2, "Done", completed = true))
         )
         val vm = viewModel()
         vm.uiState.test {
             assertEquals(2, awaitLoaded().tasks.size)
-            // Changing the preference re-emits through the ViewModel's combine and re-filters the list.
             preferencesRepository.setHideCompleted(true)
             var state = awaitItem()
             while (state.tasks.size != 1) state = awaitItem()
@@ -137,13 +136,12 @@ class TasksListViewModelTest {
             listOf(
                 task(1, "Low one", priority = Priority.LOW),
                 task(2, "High one", priority = Priority.HIGH),
-                task(3, "High two", priority = Priority.HIGH),
-            ),
+                task(3, "High two", priority = Priority.HIGH)
+            )
         )
         val vm = viewModel()
         vm.uiState.test {
             assertEquals(3, awaitLoaded().tasks.size)
-            // Selecting a filter pushes a new value into combine, re-narrowing the visible list.
             vm.onFilterChange(PriorityFilter.HIGH)
             var state = awaitItem()
             while (state.selectedFilter != PriorityFilter.HIGH) state = awaitItem()
@@ -158,8 +156,8 @@ class TasksListViewModelTest {
             listOf(
                 task(1, "a", priority = Priority.LOW),
                 task(2, "b", priority = Priority.HIGH),
-                task(3, "c", priority = Priority.HIGH),
-            ),
+                task(3, "c", priority = Priority.HIGH)
+            )
         )
         val vm = viewModel()
         vm.uiState.test {
@@ -168,7 +166,6 @@ class TasksListViewModelTest {
             assertEquals(1, counts.low)
             assertEquals(0, counts.medium)
             assertEquals(2, counts.high)
-            // Counts describe the full matched set, so they stay stable when a filter is selected.
             vm.onFilterChange(PriorityFilter.LOW)
             var state = awaitItem()
             while (state.selectedFilter != PriorityFilter.LOW) state = awaitItem()

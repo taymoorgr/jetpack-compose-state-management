@@ -47,7 +47,6 @@ private val CompletedGreen = Color(0xFF4CAF50)
 private val EditIconContainer = Color(0xFFFFE0B2)
 private val EditIconColor = Color(0xFFE65100)
 
-// Completion = hoisted business state (callback); `expanded` = local UI state in rememberSaveable.
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TaskRow(
@@ -57,7 +56,7 @@ fun TaskRow(
     modifier: Modifier = Modifier,
     selected: Boolean = false,
     selectionActive: Boolean = false,
-    onToggleSelect: () -> Unit = {},
+    onToggleSelect: () -> Unit = {}
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -76,22 +75,22 @@ fun TaskRow(
             .fillMaxWidth()
             .combinedClickable(
                 onClick = { if (selectionActive) onToggleSelect() else expanded = !expanded },
-                onLongClick = onToggleSelect,
-            ),
+                onLongClick = onToggleSelect
+            )
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(6.dp)
-                    .background(task.priority.containerColor()),
+                    .background(task.priority.containerColor())
             )
             Column(modifier = Modifier.padding(spacing.sm)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (selectionActive) {
                         Box(
                             modifier = Modifier.size(48.dp),
-                            contentAlignment = Alignment.Center,
+                            contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = if (selected) {
@@ -104,13 +103,13 @@ fun TaskRow(
                                     MaterialTheme.colorScheme.primary
                                 } else {
                                     MaterialTheme.colorScheme.outline
-                                },
+                                }
                             )
                         }
                     } else {
                         IconToggleButton(
                             checked = task.isCompleted,
-                            onCheckedChange = onToggleComplete,
+                            onCheckedChange = onToggleComplete
                         ) {
                             Icon(
                                 imageVector = if (task.isCompleted) {
@@ -120,19 +119,19 @@ fun TaskRow(
                                 },
                                 contentDescription =
                                     if (task.isCompleted) "Mark incomplete" else "Mark complete",
-                                tint = if (task.isCompleted) CompletedGreen else MaterialTheme.colorScheme.outline,
+                                tint = if (task.isCompleted) CompletedGreen else MaterialTheme.colorScheme.outline
                             )
                         }
                     }
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = spacing.sm),
+                            .padding(horizontal = spacing.sm)
                     ) {
                         Text(
                             text = task.title,
                             style = MaterialTheme.typography.bodyLarge,
-                            textDecoration = if (task.isCompleted) TextDecoration.LineThrough else null,
+                            textDecoration = if (task.isCompleted) TextDecoration.LineThrough else null
                         )
                         PriorityPill(task.priority)
                     }
@@ -142,13 +141,13 @@ fun TaskRow(
                             shape = CircleShape,
                             color = EditIconContainer,
                             contentColor = EditIconColor,
-                            modifier = Modifier.size(30.dp),
+                            modifier = Modifier.size(30.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     Icons.Rounded.Edit,
                                     contentDescription = "Edit task",
-                                    modifier = Modifier.size(20.dp),
+                                    modifier = Modifier.size(20.dp)
                                 )
                             }
                         }
@@ -162,8 +161,8 @@ fun TaskRow(
                         modifier = Modifier.padding(
                             start = spacing.xl,
                             end = spacing.sm,
-                            bottom = spacing.sm,
-                        ),
+                            bottom = spacing.sm
+                        )
                     )
                 }
             }
@@ -176,15 +175,15 @@ private fun PriorityPill(priority: Priority) {
     Surface(
         shape = MaterialTheme.shapes.small,
         color = priority.containerColor(),
-        contentColor = priority.contentColor(),
+        contentColor = priority.contentColor()
     ) {
         Text(
             text = priority.label(),
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier.padding(
                 horizontal = spacing.sm,
-                vertical = 2.dp,
-            ),
+                vertical = 2.dp
+            )
         )
     }
 }

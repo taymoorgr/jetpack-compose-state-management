@@ -21,17 +21,14 @@ private const val TASK_ID_ARG = "taskId"
 @HiltViewModel
 class TaskEditViewModel @Inject constructor(
     private val repository: TaskRepository,
-    savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    // SavedStateHandle: nav arg read by key; survives process death.
     private val taskId: Long? = savedStateHandle.get<Long>(TASK_ID_ARG)
 
-    // Private MutableStateFlow; expose read-only StateFlow.
     private val _uiState = MutableStateFlow(TaskEditUiState(taskId = taskId))
     val uiState = _uiState.asStateFlow()
 
-    // One-time events via Channel (not state) so they don't replay on recomposition/rotation.
     private val eventChannel = Channel<TaskEditEvent>(Channel.BUFFERED)
     val events = eventChannel.receiveAsFlow()
 
@@ -48,7 +45,7 @@ class TaskEditViewModel @Inject constructor(
                         description = task.description,
                         priority = task.priority,
                         isCompleted = task.isCompleted,
-                        createdAt = task.createdAt,
+                        createdAt = task.createdAt
                     )
                 }
             }
@@ -78,8 +75,8 @@ class TaskEditViewModel @Inject constructor(
                         description = current.description.trim(),
                         isCompleted = current.isCompleted,
                         priority = current.priority,
-                        createdAt = current.createdAt,
-                    ),
+                        createdAt = current.createdAt
+                    )
                 )
             }
             eventChannel.send(TaskEditEvent.Saved)

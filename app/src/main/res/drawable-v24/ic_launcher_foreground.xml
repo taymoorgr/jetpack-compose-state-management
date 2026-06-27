@@ -4,11 +4,11 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Brand-red disc within the adaptive-icon safe zone -->
+
     <path
         android:fillColor="#E11D2A"
         android:pathData="M28,54a26,26 0 1,0 52,0a26,26 0 1,0 -52,0Z" />
-    <!-- White check -->
+
     <path
         android:fillColor="#00000000"
         android:pathData="M44,55l6,7l15,-16"

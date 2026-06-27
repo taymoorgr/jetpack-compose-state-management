@@ -13,9 +13,9 @@ enum class NavBarDestination(
     val route: Route,
     val label: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
+    val unselectedIcon: ImageVector
 ) {
     TASKS(Route.TasksRoute, "Tasks", Icons.Filled.Checklist, Icons.Outlined.Checklist),
     PROFILE(Route.ProfileRoute, "Profile", Icons.Filled.Person, Icons.Outlined.Person),
-    SETTINGS(Route.SettingsRoute, "Settings", Icons.Filled.Settings, Icons.Outlined.Settings),
+    SETTINGS(Route.SettingsRoute, "Settings", Icons.Filled.Settings, Icons.Outlined.Settings)
 }

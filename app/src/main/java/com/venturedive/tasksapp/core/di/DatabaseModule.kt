@@ -28,7 +28,7 @@ object DatabaseModule {
         @ApplicationContext context: Context,
         taskDao: Provider<TaskDao>,
         profileDao: Provider<ProfileDao>,
-        @ApplicationScope scope: CoroutineScope,
+        @ApplicationScope scope: CoroutineScope
     ): TasksAppDatabase =
         Room.databaseBuilder(context, TasksAppDatabase::class.java, "tasksApp.db")
             .addCallback(
@@ -40,7 +40,7 @@ object DatabaseModule {
                             profileDao.get().upsert(SeedData.profile())
                         }
                     }
-                },
+                }
             )
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()

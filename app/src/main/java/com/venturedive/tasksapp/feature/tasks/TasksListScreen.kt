@@ -60,25 +60,24 @@ import com.venturedive.tasksapp.feature.tasks.components.TaskSearchField
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
-// collectAsStateWithLifecycle: collect UiState at the edge; consume one-time events here too.
 @Composable
 fun TasksScreen(
     onAddTask: () -> Unit,
     onEditTask: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: TasksListViewModel = hiltViewModel(),
+    viewModel: TasksListViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val deletedMessage = stringResource(R.string.task_deleted)
     val undoLabel = stringResource(R.string.action_undo)
 
-    // Transient UI state: held via rememberSaveable + the custom Saver, not in the ViewModel.
     var selection by rememberSaveable(stateSaver = TaskSelection.Saver) {
         mutableStateOf(
             TaskSelection()
         )
     }
+
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -88,7 +87,7 @@ fun TasksScreen(
                     val result = snackbarHostState.showSnackbar(
                         message = deletedMessage,
                         actionLabel = undoLabel,
-                        withDismissAction = true,
+                        withDismissAction = true
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         viewModel.onUndoDelete(event.task)
@@ -115,7 +114,7 @@ fun TasksScreen(
         onBulkDeleteRequest = { confirmDelete = true },
         onAddTask = onAddTask,
         onEditTask = onEditTask,
-        modifier = modifier,
+        modifier = modifier
     )
 
     if (confirmDelete) {
@@ -129,19 +128,18 @@ fun TasksScreen(
                         viewModel.onBulkDelete(selection.ids)
                         selection = selection.clear()
                         confirmDelete = false
-                    },
+                    }
                 ) { Text(stringResource(R.string.action_delete)) }
             },
             dismissButton = {
                 TextButton(onClick = { confirmDelete = false }) {
                     Text(stringResource(R.string.action_cancel))
                 }
-            },
+            }
         )
     }
 }
 
-// Stateless Content (UDF): state down, events up - no ViewModel passed down.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksContent(
@@ -158,10 +156,9 @@ fun TasksContent(
     onBulkDeleteRequest: () -> Unit,
     onAddTask: () -> Unit,
     onEditTask: (Long) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-    // derivedStateOf: readers recompose only when the boolean flips, not on every scroll tick.
     val showScrollToTop by remember {
         derivedStateOf { listState.firstVisibleItemIndex > 0 }
     }
@@ -174,11 +171,11 @@ fun TasksContent(
         floatingActionButton = {
             Column(
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(spacing.sm)
             ) {
                 AnimatedVisibility(visible = showScrollToTop) {
                     SmallFloatingActionButton(
-                        onClick = { scope.launch { listState.animateScrollToItem(0) } },
+                        onClick = { scope.launch { listState.animateScrollToItem(0) } }
                     ) {
                         Icon(Icons.Rounded.ArrowUpward, contentDescription = "Scroll to top")
                     }
@@ -187,12 +184,12 @@ fun TasksContent(
                     Icon(Icons.Rounded.Add, contentDescription = "Add task")
                 }
             }
-        },
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
         ) {
             if (selection.isActive) {
                 SelectionBar(
@@ -202,8 +199,8 @@ fun TasksContent(
                     onClose = onClearSelection,
                     modifier = Modifier.padding(
                         horizontal = spacing.md,
-                        vertical = spacing.sm,
-                    ),
+                        vertical = spacing.sm
+                    )
                 )
             } else {
                 PriorityFilterRow(
@@ -212,15 +209,15 @@ fun TasksContent(
                     onSelect = onFilterChange,
                     modifier = Modifier.padding(
                         horizontal = spacing.md,
-                        vertical = spacing.sm,
-                    ),
+                        vertical = spacing.sm
+                    )
                 )
                 TaskSearchField(
                     onSearch = onSearchChange,
                     modifier = Modifier.padding(
                         horizontal = spacing.md,
-                        vertical = spacing.sm,
-                    ),
+                        vertical = spacing.sm
+                    )
                 )
             }
 
@@ -229,7 +226,7 @@ fun TasksContent(
                 state.isEmpty -> EmptyState(
                     icon = Icons.Rounded.Checklist,
                     title = "No tasks",
-                    description = "Tap + to add your first task.",
+                    description = "Tap + to add your first task."
                 )
 
                 else -> TaskList(
@@ -239,7 +236,7 @@ fun TasksContent(
                     onToggleComplete = onToggleComplete,
                     onDelete = onDelete,
                     onToggleSelect = onToggleSelect,
-                    onEditTask = onEditTask,
+                    onEditTask = onEditTask
                 )
             }
         }
@@ -255,7 +252,7 @@ private fun TaskList(
     onToggleComplete: (Task, Boolean) -> Unit,
     onDelete: (Task) -> Unit,
     onToggleSelect: (Long) -> Unit,
-    onEditTask: (Long) -> Unit,
+    onEditTask: (Long) -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -263,18 +260,16 @@ private fun TaskList(
             start = spacing.md,
             end = spacing.md,
             top = spacing.sm,
-            bottom = 96.dp,
+            bottom = 96.dp
         ),
         verticalArrangement = Arrangement.spacedBy(spacing.sm),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
-        // Stable key = item identity, not position: per-item state survives reorder.
         items(items = tasks, key = { it.id }) { task ->
             val dismissState = rememberSwipeToDismissBoxState()
             LaunchedEffect(dismissState.currentValue) {
                 if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
                     onDelete(task)
-                    // Undo reuses this holder (stable key), so reset it or it re-fires delete.
                     dismissState.snapTo(SwipeToDismissBoxValue.Settled)
                 }
             }
@@ -287,23 +282,23 @@ private fun TaskList(
                     Surface(
                         color = MaterialTheme.colorScheme.errorContainer,
                         shape = MaterialTheme.shapes.medium,
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(horizontal = spacing.lg),
                             horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 Icons.Rounded.Delete,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onErrorContainer,
+                                tint = MaterialTheme.colorScheme.onErrorContainer
                             )
                         }
                     }
-                },
+                }
             ) {
                 TaskRow(
                     task = task,
@@ -311,7 +306,7 @@ private fun TaskList(
                     onEdit = { onEditTask(task.id) },
                     selected = task.id in selection.ids,
                     selectionActive = selection.isActive,
-                    onToggleSelect = { onToggleSelect(task.id) },
+                    onToggleSelect = { onToggleSelect(task.id) }
                 )
             }
         }

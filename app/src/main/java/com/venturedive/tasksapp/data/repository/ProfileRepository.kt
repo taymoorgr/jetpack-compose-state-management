@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-/** Source of truth for the user's profile; exposes it as a [Flow] for ViewModels to collect. */
 interface ProfileRepository {
     fun observeProfile(): Flow<Profile?>
     suspend fun updateProfile(profile: Profile)
@@ -19,7 +18,7 @@ interface ProfileRepository {
 
 class ProfileRepositoryImpl @Inject constructor(
     private val dao: ProfileDao,
-    @IoDispatcher private val io: CoroutineDispatcher,
+    @IoDispatcher private val io: CoroutineDispatcher
 ) : ProfileRepository {
 
     override fun observeProfile(): Flow<Profile?> =

@@ -19,7 +19,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** StateRestorationTester proves TaskRow's `rememberSaveable` expanded state survives recreation (swap to `remember` → red). */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [34])
@@ -42,11 +41,11 @@ class TaskRowRestorationTest {
                         title = "Demo task",
                         description = description,
                         priority = Priority.MEDIUM,
-                        createdAt = 1,
+                        createdAt = 1
                     ),
                     onToggleComplete = {},
                     onEdit = {},
-                    modifier = Modifier.testTag("row"),
+                    modifier = Modifier.testTag("row")
                 )
             }
         }

@@ -47,8 +47,8 @@ fun TasksApp() {
                 CenterAlignedTopAppBar(
                     title = { Text(currentNavBarDestination.label) },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.background,
-                    ),
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
                 )
             }
         },
@@ -56,20 +56,20 @@ fun TasksApp() {
             if (currentNavBarDestination != null) {
                 TasksAppNavigationBar(
                     navBarDestination = currentNavBarDestination,
-                    onNavigate = navController::setNavBarDestination,
+                    onNavigate = navController::setNavBarDestination
                 )
             }
-        },
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = Route.TasksRoute,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding)
         ) {
             composable<Route.TasksRoute> {
                 TasksScreen(
                     onAddTask = { navController.navigate(Route.TaskEditRoute()) },
-                    onEditTask = { id -> navController.navigate(Route.TaskEditRoute(taskId = id)) },
+                    onEditTask = { id -> navController.navigate(Route.TaskEditRoute(taskId = id)) }
                 )
             }
             composable<Route.ProfileRoute> { ProfileScreen() }
@@ -84,7 +84,7 @@ fun TasksApp() {
 @Composable
 private fun TasksAppNavigationBar(
     navBarDestination: NavBarDestination,
-    onNavigate: (NavBarDestination) -> Unit,
+    onNavigate: (NavBarDestination) -> Unit
 ) {
     NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
         NavBarDestination.entries.forEach { destination ->
@@ -95,10 +95,10 @@ private fun TasksAppNavigationBar(
                 icon = {
                     Icon(
                         imageVector = if (selected) destination.selectedIcon else destination.unselectedIcon,
-                        contentDescription = destination.label,
+                        contentDescription = destination.label
                     )
                 },
-                label = { Text(destination.label) },
+                label = { Text(destination.label) }
             )
         }
     }

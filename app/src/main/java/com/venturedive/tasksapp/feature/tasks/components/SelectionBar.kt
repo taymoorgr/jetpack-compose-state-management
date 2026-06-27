@@ -25,17 +25,17 @@ fun SelectionBar(
     onComplete: () -> Unit,
     onDelete: () -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         shape = MaterialTheme.shapes.large,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(horizontal = spacing.sm),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onClose) {
                 Icon(Icons.Rounded.Close, contentDescription = "Clear selection")
@@ -45,18 +45,18 @@ fun SelectionBar(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = spacing.sm),
+                    .padding(horizontal = spacing.sm)
             )
             IconButton(onClick = onComplete) {
                 Icon(
                     Icons.Rounded.CheckCircle,
-                    contentDescription = stringResource(R.string.action_complete_selected),
+                    contentDescription = stringResource(R.string.action_complete_selected)
                 )
             }
             IconButton(onClick = onDelete) {
                 Icon(
                     Icons.Rounded.Delete,
-                    contentDescription = stringResource(R.string.action_delete_selected),
+                    contentDescription = stringResource(R.string.action_delete_selected)
                 )
             }
         }

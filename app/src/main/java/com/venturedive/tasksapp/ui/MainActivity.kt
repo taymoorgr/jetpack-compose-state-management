@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
             }
 
             TasksAppTheme(darkTheme = darkTheme) {
-                // rememberSaveable survives configuration changes, so the splash stays dismissed.
                 var showLanding by rememberSaveable { mutableStateOf(true) }
                 if (showLanding) {
                     LandingScreen(onTimeout = { showLanding = false })

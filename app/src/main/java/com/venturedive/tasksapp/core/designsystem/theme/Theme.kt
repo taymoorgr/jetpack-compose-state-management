@@ -38,7 +38,7 @@ private val LightColors = lightColorScheme(
     outlineVariant = OutlineVariantLight,
     inverseSurface = InverseSurfaceLight,
     inverseOnSurface = InverseOnSurfaceLight,
-    inversePrimary = InversePrimaryLight,
+    inversePrimary = InversePrimaryLight
 )
 
 private val DarkColors = darkColorScheme(
@@ -68,14 +68,14 @@ private val DarkColors = darkColorScheme(
     outlineVariant = OutlineVariantDark,
     inverseSurface = InverseSurfaceDark,
     inverseOnSurface = InverseOnSurfaceDark,
-    inversePrimary = InversePrimaryDark,
+    inversePrimary = InversePrimaryDark
 )
 
 @Composable
 fun TasksAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
@@ -89,13 +89,13 @@ fun TasksAppTheme(
 
     CompositionLocalProvider(
         LocalSpacing provides Spacing(),
-        LocalPriorityColors provides if (darkTheme) DarkPriorityColors else LightPriorityColors,
+        LocalPriorityColors provides if (darkTheme) DarkPriorityColors else LightPriorityColors
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
             shapes = TasksAppShapes,
             typography = tasksAppTypoGraphy,
-            content = content,
+            content = content
         )
     }
 }

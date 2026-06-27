@@ -27,26 +27,26 @@ fun EmptyState(
     icon: ImageVector,
     title: String,
     modifier: Modifier = Modifier,
-    description: String? = null,
+    description: String? = null
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(56.dp)
         )
         Spacer(Modifier.height(spacing.md))
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         if (description != null) {
             Spacer(Modifier.height(spacing.sm))
@@ -54,7 +54,7 @@ fun EmptyState(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -67,7 +67,7 @@ private fun EmptyStatePreview() {
         EmptyState(
             icon = Icons.Rounded.Inbox,
             title = "No tasks yet",
-            description = "Tasks you add will show up here.",
+            description = "Tasks you add will show up here."
         )
     }
 }

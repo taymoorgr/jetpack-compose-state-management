@@ -13,7 +13,7 @@ import com.venturedive.tasksapp.core.designsystem.theme.TasksAppTheme
 fun LoadingState(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
     }

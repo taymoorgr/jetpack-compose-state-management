@@ -8,5 +8,5 @@ data class Task(
     val description: String = "",
     val isCompleted: Boolean = false,
     val priority: Priority = Priority.MEDIUM,
-    val createdAt: Long = 0L,
+    val createdAt: Long = 0L
 )

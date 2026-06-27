@@ -18,13 +18,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val repository: ProfileRepository,
+    private val repository: ProfileRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    // One-time events via Channel (not state) so they don't replay on rotation.
     private val eventChannel = Channel<ProfileEvent>(Channel.BUFFERED)
     val events = eventChannel.receiveAsFlow()
 
@@ -43,7 +42,7 @@ class ProfileViewModel @Inject constructor(
                     bio = profile.bio,
                     avatarUri = profile.avatarUri,
                     isLoading = false,
-                    validation = validate(profile.name, profile.email),
+                    validation = validate(profile.name, profile.email)
                 )
             }
         }
@@ -70,8 +69,8 @@ class ProfileViewModel @Inject constructor(
                     name = state.name.trim(),
                     email = state.email.trim(),
                     bio = state.bio.trim(),
-                    avatarUri = state.avatarUri,
-                ),
+                    avatarUri = state.avatarUri
+                )
             )
             _uiState.update { it.copy(isSaving = false) }
             eventChannel.send(ProfileEvent.Saved)
@@ -81,5 +80,5 @@ class ProfileViewModel @Inject constructor(
 
 private fun validate(name: String, email: String) = ProfileValidation(
     nameError = if (name.isBlank()) NameError.Blank else null,
-    emailError = if (email.isNotBlank() && !email.contains("@")) EmailError.Invalid else null,
+    emailError = if (email.isNotBlank() && !email.contains("@")) EmailError.Invalid else null
 )

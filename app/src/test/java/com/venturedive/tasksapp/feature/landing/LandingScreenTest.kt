@@ -51,7 +51,6 @@ class LandingScreenTest {
         composeRule.mainClock.advanceTimeBy(2_000)
         composeRule.waitForIdle()
 
-        // rememberUpdatedState makes the one-shot effect fire the LATEST callback (without it → "stale", red).
         assertEquals("latest", result)
     }
 }

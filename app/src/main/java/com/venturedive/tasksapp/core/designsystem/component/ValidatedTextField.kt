@@ -15,7 +15,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import com.venturedive.tasksapp.core.designsystem.theme.TasksAppTheme
 
-// UI-logic state holder: bundles field state + logic, created via the rememberValidatedFieldState factory.
 @Stable
 class ValidatedFieldState {
     var touched by mutableStateOf(false)
@@ -29,7 +28,8 @@ class ValidatedFieldState {
 }
 
 @Composable
-fun rememberValidatedFieldState(): ValidatedFieldState = remember { ValidatedFieldState() }
+fun rememberValidatedFieldState(): ValidatedFieldState =
+    remember { ValidatedFieldState() }
 
 @Composable
 fun ValidatedTextField(
@@ -40,7 +40,7 @@ fun ValidatedTextField(
     error: String? = null,
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    state: ValidatedFieldState = rememberValidatedFieldState(),
+    state: ValidatedFieldState = rememberValidatedFieldState()
 ) {
     val showError = state.showError(error)
     val supporting: (@Composable () -> Unit)? =
@@ -58,7 +58,7 @@ fun ValidatedTextField(
         singleLine = singleLine,
         keyboardOptions = keyboardOptions,
         supportingText = supporting,
-        modifier = modifier.onFocusChanged { state.onFocusChanged(it.isFocused) },
+        modifier = modifier.onFocusChanged { state.onFocusChanged(it.isFocused) }
     )
 }
 
@@ -71,7 +71,7 @@ private fun ValidatedTextFieldPreview() {
             onValueChange = {},
             label = "Name",
             error = "Name can't be empty",
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
