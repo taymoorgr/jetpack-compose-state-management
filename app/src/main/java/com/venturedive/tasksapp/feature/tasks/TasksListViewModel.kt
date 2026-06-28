@@ -38,18 +38,22 @@ class TasksListViewModel @Inject constructor(
         searchQuery,
         priorityFilter
     ) { tasks, preferences, query, filter ->
+
         val filteredTasks = tasks
             .filter { !preferences.hideCompleted || !it.isCompleted }
             .filter { query.isBlank() || it.title.contains(query, ignoreCase = true) }
+
         val counts = PriorityCounts(
             all = filteredTasks.size,
             low = filteredTasks.count { it.priority == Priority.LOW },
             medium = filteredTasks.count { it.priority == Priority.MEDIUM },
             high = filteredTasks.count { it.priority == Priority.HIGH }
         )
+
         val tasksToDisplay = filteredTasks
             .filter { filter == PriorityFilter.ALL || it.priority == filter.priority }
             .sortedWith(comparatorFor(preferences.sortOrder))
+
         TasksListUiState(
             tasks = tasksToDisplay.toImmutableList(),
             isLoading = false,

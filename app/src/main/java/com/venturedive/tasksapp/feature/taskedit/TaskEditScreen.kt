@@ -47,7 +47,13 @@ fun TaskEditScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffectSaved(viewModel = viewModel, onDone = onDone)
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                TaskEditEvent.Saved -> onDone()
+            }
+        }
+    }
 
     TaskEditContent(
         state = state,
@@ -58,17 +64,6 @@ fun TaskEditScreen(
         onBack = onDone,
         modifier = modifier
     )
-}
-
-@Composable
-private fun LaunchedEffectSaved(viewModel: TaskEditViewModel, onDone: () -> Unit) {
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                TaskEditEvent.Saved -> onDone()
-            }
-        }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

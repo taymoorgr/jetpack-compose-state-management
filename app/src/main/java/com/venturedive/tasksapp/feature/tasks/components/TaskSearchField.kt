@@ -32,6 +32,7 @@ fun TaskSearchField(
     modifier: Modifier = Modifier
 ) {
     var query by rememberSaveable { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
         snapshotFlow { query }
             .debounce(300.milliseconds)

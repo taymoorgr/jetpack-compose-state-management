@@ -41,6 +41,7 @@ class TaskEditViewModel @Inject constructor(
             repository.observeTask(taskId).first()?.let { task ->
                 _uiState.update {
                     it.copy(
+                        taskId = task.id,
                         title = task.title,
                         description = task.description,
                         priority = task.priority,

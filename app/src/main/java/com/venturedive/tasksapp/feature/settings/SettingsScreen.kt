@@ -37,6 +37,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val preferences by viewModel.preferences.collectAsStateWithLifecycle()
+
     SettingsContent(
         preferences = preferences,
         onSortOrderChange = viewModel::onSortOrderChange,
