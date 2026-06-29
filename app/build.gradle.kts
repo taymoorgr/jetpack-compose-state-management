@@ -61,6 +61,14 @@ android {
     }
 }
 
+composeCompiler {
+    if (project.findProperty("enableComposeCompilerReports") == "true") {
+        val outputDir = layout.buildDirectory.dir("compose-compiler")
+        metricsDestination = outputDir
+        reportsDestination = outputDir
+    }
+}
+
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
