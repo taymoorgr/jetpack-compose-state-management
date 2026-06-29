@@ -61,7 +61,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 
 @Composable
-fun TasksScreen(
+fun TasksListScreen(
     onAddTask: () -> Unit,
     onEditTask: (Long) -> Unit,
     modifier: Modifier = Modifier,
@@ -74,9 +74,7 @@ fun TasksScreen(
     val undoLabel = stringResource(R.string.action_undo)
 
     var selection by rememberSaveable(stateSaver = TaskSelection.Saver) {
-        mutableStateOf(
-            TaskSelection()
-        )
+        mutableStateOf(TaskSelection())
     }
 
     var confirmDelete by rememberSaveable { mutableStateOf(false) }

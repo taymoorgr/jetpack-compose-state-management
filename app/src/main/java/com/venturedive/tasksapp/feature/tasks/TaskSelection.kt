@@ -4,7 +4,9 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.saveable.Saver
 
 @Immutable
-data class TaskSelection(val ids: Set<Long> = emptySet()) {
+data class TaskSelection(
+    val ids: Set<Long> = emptySet()
+) {
     val count: Int get() = ids.size
     val isActive: Boolean get() = ids.isNotEmpty()
 

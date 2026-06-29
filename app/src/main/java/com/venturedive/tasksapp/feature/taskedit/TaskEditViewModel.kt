@@ -7,11 +7,11 @@ import com.venturedive.tasksapp.data.repository.TaskRepository
 import com.venturedive.tasksapp.domain.model.Priority
 import com.venturedive.tasksapp.domain.model.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,8 +29,8 @@ class TaskEditViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(TaskEditUiState(taskId = taskId))
     val uiState = _uiState.asStateFlow()
 
-    private val eventChannel = Channel<TaskEditEvent>(Channel.BUFFERED)
-    val events = eventChannel.receiveAsFlow()
+    private val _events = MutableSharedFlow<TaskEditEvent>()
+    val events = _events.asSharedFlow()
 
     init {
         taskId?.let { loadTask(it) }
@@ -80,7 +80,7 @@ class TaskEditViewModel @Inject constructor(
                     )
                 )
             }
-            eventChannel.send(TaskEditEvent.Saved)
+            _events.emit(TaskEditEvent.Saved)
         }
     }
 }

@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.venturedive.tasksapp.data.repository.ProfileRepository
 import com.venturedive.tasksapp.domain.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,8 +24,8 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    private val eventChannel = Channel<ProfileEvent>(Channel.BUFFERED)
-    val events = eventChannel.receiveAsFlow()
+    private val _events = MutableSharedFlow<ProfileEvent>()
+    val events = _events.asSharedFlow()
 
     init {
         loadProfile()
@@ -73,7 +73,7 @@ class ProfileViewModel @Inject constructor(
                 )
             )
             _uiState.update { it.copy(isSaving = false) }
-            eventChannel.send(ProfileEvent.Saved)
+            _events.emit(ProfileEvent.Saved)
         }
     }
 }

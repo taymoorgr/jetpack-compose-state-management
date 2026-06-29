@@ -9,12 +9,12 @@ import com.venturedive.tasksapp.domain.model.SortOrder
 import com.venturedive.tasksapp.domain.model.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,8 +29,8 @@ class TasksListViewModel @Inject constructor(
 
     private val priorityFilter = MutableStateFlow(PriorityFilter.ALL)
 
-    private val eventChannel = Channel<TasksListEvent>(Channel.BUFFERED)
-    val events = eventChannel.receiveAsFlow()
+    private val _events = MutableSharedFlow<TasksListEvent>()
+    val events = _events.asSharedFlow()
 
     val uiState: StateFlow<TasksListUiState> = combine(
         taskRepository.observeTasks(),
@@ -84,7 +84,7 @@ class TasksListViewModel @Inject constructor(
     fun onDelete(task: Task) {
         viewModelScope.launch {
             taskRepository.deleteTask(task.id)
-            eventChannel.send(TasksListEvent.ShowUndoDelete(task))
+            _events.emit(TasksListEvent.ShowUndoDelete(task))
         }
     }
 

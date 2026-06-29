@@ -32,7 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import com.venturedive.tasksapp.feature.profile.ProfileScreen
 import com.venturedive.tasksapp.feature.settings.SettingsScreen
 import com.venturedive.tasksapp.feature.taskedit.TaskEditScreen
-import com.venturedive.tasksapp.feature.tasks.TasksScreen
+import com.venturedive.tasksapp.feature.tasks.TasksListScreen
 import com.venturedive.tasksapp.navigation.NavBarDestination
 import com.venturedive.tasksapp.navigation.Route
 
@@ -90,7 +90,7 @@ fun TasksApp() {
                     .fillMaxHeight()
             ) {
                 composable<Route.TasksRoute> {
-                    TasksScreen(
+                    TasksListScreen(
                         onAddTask = { navController.navigate(Route.TaskEditRoute()) },
                         onEditTask = { id -> navController.navigate(Route.TaskEditRoute(taskId = id)) }
                     )
